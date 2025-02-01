@@ -7,9 +7,9 @@
 ## 🔍 專長技術  
 
 - **機器學習 (Machine Learning)**：Random Forest, XGBoost, LightGBM, GANs  
-- **數據分析 (Data Analysis)**：Pandas, NumPy, Matplotlib, Seaborn  
-- **特徵工程 (Feature Engineering)**：Box-Cox轉換,目標編碼 (Target Encoding), 數值轉換 (Log Transform)  
-- **程式語言 (Programming)**：Python (主要), LaTeX (論文編寫)  
+- **數據分析 (Data Analysis)**：Linear models and statistical correlation analysis,Pandas, NumPy, Matplotlib, Seaborn ,視覺化表達 
+- **特徵工程 (Feature Engineering)**：Box-Cox轉換（計算最佳似然值）,目標編碼 (Target Encoding), 頻率編碼(Frequency Encoding) 或是其他編碼
+- **程式語言 (Programming)**：Python (主要), LaTeX (論文編寫) ,R(學習過，非主要使用) 
 
 ## 📌 近期研究與專案  
 
