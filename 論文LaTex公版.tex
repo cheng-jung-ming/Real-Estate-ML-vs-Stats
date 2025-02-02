@@ -1,0 +1,269 @@
+\documentclass{ctexart}
+
+% 引入必要的包
+\usepackage{tikz}
+\usepackage{qtree} % 引入 qtree 套件
+\usepackage{url} % 用於支持 \url 命令
+\usepackage{lipsum} % 虛擬文本示例
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\usepackage{indentfirst} % 使首段也縮進
+\usepackage[a4paper, top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
+\usepackage{titlesec} % 添加 titlesec 宏包以設置章節標題格式
+\usepackage{amsmath} % 用於數學公式
+\usepackage{graphicx} % 用於插入圖片
+\usepackage{fancyhdr} % 用於頁眉和頁腳
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{fontspec}
+\usepackage{tabularx}
+\usepackage{subcaption}
+\usepackage{etoolbox} % 用於調整 \paragraph 標題格式
+\usepackage{titletoc} % 用於目錄中添加 \paragraph
+\usepackage{tocloft}
+\usepackage{hyperref} % 最後加載 hyperref 包以生成目錄中的超鏈接
+
+% 設置系統中已安裝的中文字體
+\setCJKmainfont{STKaiti} % 標楷體
+\setmainfont{Times New Roman}
+
+% 使用 ctex 宏包提供的接口重新定義參考文獻標題
+\ctexset{
+    bibname = {參考文獻},
+}
+
+% 自定義章節標題格式
+\titleformat{\section}[block]{\centering\fontsize{20}{24}\selectfont\bfseries}{第\thesection 章}{1em}{}
+\titleformat{\subsection}[block]{\fontsize{16}{20}\selectfont\bfseries}{\thesubsection.}{1em}{}
+\titleformat{\subsubsection}[block]{\fontsize{14}{18}\selectfont\bfseries}{\thesubsubsection.}{1em}{}
+\titleformat{\paragraph}[block]{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}[]
+
+% 重新定義章節計數器，確保章節編號是阿拉伯數字形式
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+\renewcommand{\theparagraph}{\thesubsubsection.\arabic{paragraph}}
+
+% 設置頁碼格式和位置
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[C]{\thepage} % 頁碼居中
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+\pagestyle{plain} % 設置頁碼樣式
+
+% 設置圖以及表標題格式
+\captionsetup[figure]{name=Figure}
+\captionsetup[table]{name=Table}
+
+% 修改圖表目次項的顯示格式
+\renewcommand{\cftfigpresnum}{\figurename~}
+\renewcommand{\cftfigaftersnum}{\hspace{1em}}
+\renewcommand{\cfttabpresnum}{\tablename~}
+\renewcommand{\cfttabaftersnum}{\hspace{1em}}
+\renewcommand{\cftfigleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cfttableader}{\cftdotfill{\cftdotsep}}
+
+% 調整目次中圖表標題的字體大小
+\renewcommand{\cftfigfont}{\Large}
+\renewcommand{\cfttabfont}{\Large}
+
+% 修改圖表目次項的顯示格式
+\titlecontents{figure} % 修改圖表目錄中的圖
+  [0pt] % 左邊距
+  {\addvspace{1em}\Large} % 前置間距並設置字體大小
+  {\Large\bfseries Figure~\thecontentslabel\enspace} % 標號格式
+  {} % 無標題格式
+  {\bfseries\cftdotfill{\cftdotsep}\contentspage} % 標號後置格式，包含虛線
+  
+\titlecontents{table} % 修改圖表目錄中的表
+  [0pt] % 左邊距
+ {\addvspace{1em}\Large} % 前置間距並設置字體大小
+  {\Large\bfseries Table~\thecontentslabel\enspace} % 標號格式
+  {} % 無標題格式
+  {\bfseries\cftdotfill{\cftdotsep}\contentspage} % 標號後置格式，包含虛線
+
+% 確保段落顯示編號
+\setcounter{secnumdepth}{4}
+% 使用 etoolbox 宏包重新定義 paragraph 並設置字體大小和間距
+\makeatletter
+\patchcmd{\paragraph}{\normalfont\normalsize\bfseries}{\normalfont\normalsize\bfseries\fontsize{12}{16}\selectfont}{}{}
+\patchcmd{\paragraph}{\theparagraph}{\theparagraph}{}{}
+\titlespacing*{\paragraph}{0pt}{1.5ex plus 1ex minus .2ex}{1em}
+\makeatother
+
+    
+% 調整目次項的間距
+\setlength{\cftfignumwidth}{4em} % 調整圖目次項數字的寬度
+\setlength{\cfttabnumwidth}{4em} % 調整表目次項數字的寬度
+\setlength{\cftbeforesecskip}{1em}       % 調整章節標題前的間距
+\setlength{\cftbeforesubsecskip}{1em}    % 調整小節標題前的間距
+\setlength{\cftbeforesubsubsecskip}{1em} % 調整次小節標題前的間距
+
+
+% 設置摘要頁碼格式
+\pagenumbering{roman} % 使用小寫羅馬數字編號
+
+% 目錄設置
+\renewcommand{\cfttoctitlefont}{\Large\bfseries\CJKfamily{bkai}\hfill}
+\renewcommand{\cftaftertoctitle}{\hfill} % 目次標題居中
+\renewcommand{\cftloftitlefont}{\Large\bfseries\CJKfamily{bkai}\hfill}
+\renewcommand{\cftafterloftitle}{\hfill} % 表目次標題居中
+\renewcommand{\cftlottitlefont}{\Large\bfseries\CJKfamily{bkai}\hfill}
+\renewcommand{\cftafterlottitle}{\hfill} % 圖目次標題居中
+\setlength{\cftaftertoctitleskip}{10pt}
+
+% 調整目錄項目的字體大小
+\renewcommand{\cftsecfont}{\Large\CJKfamily{bkai}} % 章節標題
+\renewcommand{\cftsubsecfont}{\Large\CJKfamily{bkai}} % 小節標題
+\renewcommand{\cftsubsubsecfont}{\Large\CJKfamily{bkai}} % 小小節標題
+\renewcommand{\cftparafont}{\Large\CJKfamily{bkai}} % 其他標題
+\renewcommand{\cftbeforesecskip}{10pt} % 章節標題之前的間距
+\renewcommand{\cftbeforesubsecskip}{8pt} % 小節標題之前的間距
+
+\usepackage{geometry}
+\geometry{
+    textheight=20.5cm,
+    top=3cm,
+    bottom=3cm,
+    footskip=1.5cm,
+    marginparwidth=2.5cm,
+    left=3cm,
+    right=3cm
+}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    {\fontsize{20}{24}\selectfont 國立中興大學應用數學系\\[0.5cm] 碩士論文 \par}
+    \vspace{4.8cm} % 調整論文題目位置，將其與「國立中興大學ＯＯ系」相隔6公分
+    {\fontsize{20}{24}\selectfont 這裡打論文中文題目\\（以K公司為例)\par}
+    {\fontsize{20}{24}\selectfont 這裡打論文英文題目\par}
+     \vspace{6.2cm}
+    {\fontsize{20}{24}\selectfont \textbf{指導教授：}\setmainfont{Kaiti TC} OOO \textit{OOO} \par}  
+     \vspace{0.5cm} % 調整行距
+    {\fontsize{20}{24}\selectfont \textbf{研究生：}\setmainfont{Kaiti TC} OOO \textit{OOO} \par}
+    \vfill
+    {\fontsize{20}{24}\selectfont 中華民國OOO年O月 \par}
+\end{titlepage}
+
+\onehalfspacing % 1.5倍行距
+
+% 致謝頁
+\clearpage
+\thispagestyle{empty} % 清空當前頁面的頁眉和頁腳
+\begin{center}
+    \Large \textbf{誌謝辭}
+\end{center}
+\vspace{0.5cm}
+\noindent
+\par
+這裡打致謝辭內容
+\newpage
+
+% 中文摘要部分
+\begin{center}
+{\fontsize{20}{24}\selectfont 摘要} %設置標題
+\setcounter{page}{1} % 從第1頁開始
+\end{center}
+\vspace{0.5cm} % 摘要與標題距离为0.5cm
+\noindent % 段落不縮進
+\par
+這裡打摘要
+% 添加中文摘要的關鍵詞
+\vspace{1cm} % 设置与关键词之间的垂直距离为1cm
+\noindent % 段落不缩进
+\textbf{關鍵字：}ＸＸＸ、ＯＯＯ、...
+% 摘要页码置中
+\thispagestyle{plain} % 设置当前页页码格式为默认样式，没有页眉页脚但有页码
+\addcontentsline{toc}{section}{摘要} % 添加摘要到目錄
+\newpage
+
+% 英文摘要部分
+\begin{center}
+    {\fontsize{20}{24}\selectfont Abstract} % 设置摘要标题的字体大小和样式
+\end{center}
+\vspace{0.5cm} % 设置与摘要标题的距离为0.5cm
+\noindent % 段落不缩进
+\par
+這裡打英文拆要
+% 添加英文摘要的關鍵詞
+\vspace{1cm} % 设置与关键词之间的垂直距离为1cm
+\noindent % 段落不缩进
+\textbf{Keywords：}英文摘要關鍵字
+% 英文摘要页码置中
+\thispagestyle{plain} % 设置当前页页码格式为默认样式，没有页眉页脚但有页码
+\addcontentsline{toc}{section}{Abstract} % 添加Abstract到目錄
+\newpage
+
+
+% 目录页
+\renewcommand{\contentsname}{目次}
+\tableofcontents
+\addcontentsline{toc}{section}{目次} % 添加目次到目錄
+\newpage
+
+% 表目录页
+\renewcommand{\listtablename}{表目次}
+\listoftables
+\addcontentsline{toc}{section}{表目次} % 添加表目次到目錄
+\newpage
+
+% 图目录页
+\renewcommand{\listfigurename}{圖目次}
+\listoffigures
+\addcontentsline{toc}{section}{圖目次} % 添加圖目次到目錄
+\newpage
+
+% 修改图目次项的显示格式
+\makeatletter
+\renewcommand{\l@figure}[2]{%
+  \noindent\makebox[2.5em][l]{\figurename\  #1:} #2\par}
+\makeatother
+
+% 调整页码格式为阿拉伯数字，并从 1 开始编号
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\section{緒論}
+
+\subsection{研究背景}
+\subsubsection{ＸＸＸ} 
+ 
+
+\section{文獻探討}
+
+\subsection{ＸＸＸ}
+\subsubsection{ＸＸＸ} 
+
+
+\section{研究方法}
+\subsection{ＸＸＸ}
+\subsubsection{ＸＸＸ}
+
+\section{實驗結果}
+\subsection{ＸＸＸ}
+\subsubsection{ＸＸＸ}
+
+\section{結論與限制}
+\subsection{ＸＸＸ}
+\subsubsection{ＸＸＸ}
+
+\clearpage % 插入新頁
+
+% 插入參考文獻部分
+\begin{thebibliography}{99}
+\bibitem{sap}
+現代化供應鏈的需求預測思愛普 SAP。取自 \url{https://www.sap.com/taiwan/products/scm/integrated-business-planning/what-is-supply-chain-planning/demand-forecasting.html}
+\bibitem{zhangjian2022}張簡復中(2022), 供應鏈管理 (第三版), 新文京開發出版股份有限公司,新北市.
+\bibitem{breiman2001random} Breiman, L. (2001). Random forests. Machine learning, 45, 5-32.
+
+\end{thebibliography}
+\end{document}
