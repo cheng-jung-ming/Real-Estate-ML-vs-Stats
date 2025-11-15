@@ -1,0 +1,345 @@
+\documentclass{ctexart}
+
+% 引入必要的包
+\usepackage{tikz}
+\usepackage{qtree} % 引入 qtree 套件
+\usepackage{url} % 用於支持 \url 命令
+\usepackage{lipsum} % 虛擬文本示例
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\usepackage{indentfirst} % 使首段也縮進
+\usepackage[a4paper, top=3cm, bottom=3cm, left=3cm, right=3cm]{geometry}
+\usepackage{titlesec} % 添加 titlesec 宏包以設置章節標題格式
+\usepackage{amsmath} % 用於數學公式
+\usepackage{graphicx} % 用於插入圖片
+\usepackage{fancyhdr} % 用於頁眉和頁腳
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{fontspec}
+\usepackage{tabularx}
+\usepackage{subcaption}
+\usepackage{etoolbox} % 用於調整 \paragraph 標題格式
+\usepackage{titletoc} % 用於目錄中添加 \paragraph
+\usepackage{tocloft}
+\usepackage{hyperref} % 最後加載 hyperref 包以生成目錄中的超鏈接
+\usepackage{afterpage} 
+
+
+% 設置系統中已安裝的中文字體
+\setCJKmainfont{STKaiti} % 標楷體
+\setmainfont{Times New Roman}
+
+% 使用 ctex 宏包提供的接口重新定義參考文獻標題
+\ctexset{
+    bibname = {參考文獻},
+}
+
+% 自定義章節標題格式
+\titleformat{\section}[block]{\centering\fontsize{20}{24}\selectfont\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}[block]{\fontsize{16}{20}\selectfont\bfseries}{\thesubsection.}{1em}{}
+\titleformat{\subsubsection}[block]{\fontsize{14}{18}\selectfont\bfseries}{\thesubsubsection.}{1em}{}
+\titleformat{\paragraph}[block]{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}[]
+
+% 中文章節編號格式
+\renewcommand{\thesection}{第\chinese{section}章}
+
+% 子章節仍用阿拉伯數字（不用 thesection）
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+\renewcommand{\theparagraph}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}.\arabic{paragraph}}
+
+% 目錄中只改 section 的顯示，其他不改
+\usepackage{etoolbox}  % for \patchcmd
+\makeatletter
+\patchcmd{\l@section}
+  {\numberline{\@secnumfont#1}}
+  {\numberline{\@secnumfont 第\chinese{section}章}}
+  {}{}
+\makeatother
+
+
+% 設置頁碼格式和位置
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[C]{\thepage} % 頁碼居中
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+\pagestyle{plain} % 設置頁碼樣式
+
+% 設置圖以及表標題格式
+\captionsetup[figure]{name=圖}
+\captionsetup[table]{name=表}
+
+% 修改圖表目次項的顯示格式
+\renewcommand{\cftfigpresnum}{\figurename~}
+\renewcommand{\cftfigaftersnum}{\hspace{1em}}
+\renewcommand{\cfttabpresnum}{\tablename~}
+\renewcommand{\cfttabaftersnum}{\hspace{1em}}
+\renewcommand{\cftfigleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cfttableader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+
+% 調整目次中圖表標題的字體大小
+\renewcommand{\cftfigfont}{\Large}
+\renewcommand{\cfttabfont}{\Large}
+
+% 修改圖表目次項的顯示格式
+\titlecontents{figure} % 修改圖表目錄中的圖
+  [0pt] % 左邊距
+  {\addvspace{1em}\Large} % 前置間距並設置字體大小
+  {\Large\bfseries 圖~\thecontentslabel\enspace} % 標號格式
+  {} % 無標題格式
+  {\bfseries\cftdotfill{\cftdotsep}\contentspage} % 標號後置格式，包含虛線
+  
+\titlecontents{table} % 修改圖表目錄中的表
+  [0pt] % 左邊距
+ {\addvspace{0.9em}\Large} % 前置間距並設置字體大小
+  {\Large\bfseries 表~\thecontentslabel\enspace} % 標號格式
+  {} % 無標題格式
+  {\bfseries\cftdotfill{\cftdotsep}\contentspage} % 標號後置格式，包含虛線
+
+% 確保段落顯示編號
+\setcounter{secnumdepth}{4}
+% 使用 etoolbox 宏包重新定義 paragraph 並設置字體大小和間距
+\makeatletter
+\patchcmd{\paragraph}{\normalfont\normalsize\bfseries}{\normalfont\normalsize\bfseries\fontsize{12}{16}\selectfont}{}{}
+\patchcmd{\paragraph}{\theparagraph}{\theparagraph}{}{}
+\titlespacing*{\paragraph}{0pt}{1.5ex plus 1ex minus .2ex}{1em}
+\makeatother
+
+    
+% 調整目次項的間距
+\setlength{\cftfignumwidth}{4em} % 調整圖目次項數字的寬度
+\setlength{\cfttabnumwidth}{4em} % 調整表目次項數字的寬度
+\setlength{\cftbeforesecskip}{1.5em}       % 調整章節標題前的間距
+\setlength{\cftbeforesubsecskip}{1.2em}    % 調整小節標題前的間距
+\setlength{\cftbeforesubsubsecskip}{1em} % 調整次小節標題前的間距
+
+
+% 設置摘要頁碼格式
+\pagenumbering{roman} % 使用小寫羅馬數字編號
+
+% 目錄設置
+\renewcommand{\cfttoctitlefont}{\Large\bfseries\CJKfamily{bkai}\hfill}
+\renewcommand{\cftaftertoctitle}{\hfill} % 目次標題居中
+\renewcommand{\cftloftitlefont}{\Large\bfseries\CJKfamily{bkai}\hfill}
+\renewcommand{\cftafterloftitle}{\hfill} % 表目次標題居中
+\renewcommand{\cftlottitlefont}{\Large\bfseries\CJKfamily{bkai}\hfill}
+\renewcommand{\cftafterlottitle}{\hfill} % 圖目次標題居中
+\setlength{\cftaftertoctitleskip}{10pt}
+
+% 調整目錄項目的字體大小
+\renewcommand{\cftsecfont}{\Large\CJKfamily{bkai}} % 章節標題
+\renewcommand{\cftsubsecfont}{\Large\CJKfamily{bkai}} % 小節標題
+\renewcommand{\cftsubsubsecfont}{\Large\CJKfamily{bkai}} % 小小節標題
+\renewcommand{\cftparafont}{\Large\CJKfamily{bkai}} % 其他標題
+\renewcommand{\cftbeforesecskip}{16pt} % 章節標題之前的間距
+\renewcommand{\cftbeforesubsecskip}{14pt} % 小節標題之前的間距
+
+\usepackage{geometry}
+\geometry{
+    textheight=20.5cm,
+    top=3cm,
+    bottom=3cm,
+    footskip=1.5cm,
+    marginparwidth=2.5cm,
+    left=3cm,
+    right=3cm
+}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    {\fontsize{18}{22}\selectfont 國立中興大學應用數學系\\[0.5cm] 碩士學位論文 \par}
+    \vspace{4cm} % 調整論文題目與學校名稱的間距
+    {\fontsize{18}{22}\selectfont 123456：\\56789\\（以K公司為例)\par}
+    \vspace{0.5cm} % 保持適當間距
+    {\fontsize{18}{22}\selectfont 123456:\\ 56789 \\ 12233445\\ (A Case Study of K Company)\par}
+    \vspace{5cm} % 減少空白，避免年份被擠掉
+    {\fontsize{18}{22}\selectfont \textbf{指導教授：} 林長鋆 \textit{Chang-Yun Lin} \par}  
+    \vspace{0.5cm}
+    {\fontsize{18}{22}\selectfont \textbf{研究生：} 鄭榮明 \textit{Jung-Ming Cheng} \par}
+    \vfill
+    {\fontsize{18}{22}\selectfont 中華民國一百一十四年七月 \par}
+\end{titlepage}
+
+\onehalfspacing % 设置1.5倍行距
+
+% 致謝頁
+\clearpage
+\thispagestyle{empty} % 清空當前頁面的頁眉和頁腳
+\begin{center}
+    \Large \textbf{誌謝辭}
+\end{center}
+\vspace{0.5cm}
+\noindent
+\par
+\begin{onehalfspacing}
+寫致謝辭。
+\end{onehalfspacing}
+
+\newpage
+
+% 中文摘要部分
+\begin{center}
+{\fontsize{20}{24}\selectfont 摘要} % 设置摘要标题的字体大小和样式
+\setcounter{page}{1} % 從第1頁開始
+\end{center}
+\vspace{0.5cm} % 设置与摘要标题的距离为0.5cm
+\noindent % 段落不缩进
+\par
+\begin{onehalfspacing}
+寫中文摘要\par
+\end{onehalfspacing}
+
+% 添加中文摘要的關鍵詞
+\vspace{1cm} % 设置与关键词之间的垂直距离为1cm
+\noindent % 段落不缩进
+\textbf{關鍵字：}XXX、YYY、ZZZ、AAA、BBB
+% 摘要页码置中
+\thispagestyle{plain} % 设置当前页页码格式为默认样式，没有页眉页脚但有页码
+\addcontentsline{toc}{section}{摘要} % 添加摘要到目錄
+\newpage
+
+% 英文摘要部分
+\begin{center}
+    {\fontsize{20}{24}\selectfont Abstract} % 设置摘要标题的字体大小和样式
+\end{center}
+\vspace{0.5cm} % 设置与摘要标题的距离为0.5cm
+\noindent % 段落不缩进
+\par
+\begin{onehalfspacing}
+寫英文摘要
+\end{onehalfspacing}
+
+
+% 添加英文摘要的關鍵詞
+\vspace{1cm} % 设置与关键词之间的垂直距离为1cm
+\noindent % 段落不缩进
+\textbf{Keywords：}XXX、YYY、ZZZ、AAA、BBB
+% 英文摘要页码置中
+\thispagestyle{plain} % 设置当前页页码格式为默认样式，没有页眉页脚但有页码
+\addcontentsline{toc}{section}{Abstract} % 添加Abstract到目錄
+\newpage
+
+
+% 目录页
+\renewcommand{\contentsname}{目次}
+\addcontentsline{toc}{section}{目次} % 添加目次到目錄
+\tableofcontents
+\newpage
+
+% 表目录页
+\renewcommand{\listtablename}{表目次}
+\listoftables
+\addcontentsline{toc}{section}{表目次} % 添加表目次到目錄
+\newpage
+
+% 圖目錄頁
+\renewcommand{\listfigurename}{圖目次}
+\listoffigures
+\addcontentsline{toc}{section}{圖目次} % 添加圖目次到目錄
+\newpage
+
+
+% 修改图目次项的显示格式
+\makeatletter
+\renewcommand{\l@figure}[2]{%
+  \noindent\makebox[2.5em][l]{\figurename\  #1:} #2\par}
+\makeatother
+
+% 调整页码格式为阿拉伯数字，并从 1 开始编号
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\section{緒論}
+\begin{doublespace}
+
+
+\indent 開始本文。
+
+\subsection{研究背景}
+\subsubsection{AAA} 
+ 開始寫。
+
+\subsubsection{BBB}
+
+\end{doublespace}
+\newpage
+
+
+
+\section{文獻探討}
+\begin{doublespace}
+
+\subsection{供應鏈需求預測之機器學習技術} 
+% 插入圖片
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{/Users/ccit0915/Desktop/論文素材/供應鏈照片-En}
+\caption{供應鏈管理的決策層級}
+\label{fig:supply_75}
+\end{figure}
+
+\end{doublespace}
+\newpage
+
+\section{研究方法}
+\begin{doublespace}
+
+\subsection{AAA}
+
+\end{doublespace}
+\newpage
+
+\section{實驗結果}
+\begin{doublespace}
+
+
+\subsection{AAA}
+
+\end{doublespace}
+\newpage
+
+\section{結論與限制}
+\begin{doublespace}
+
+\subsection{AAA}
+
+\end{doublespace}
+
+\clearpage % 插入新頁
+% 插入參考文獻部分
+\phantomsection
+\addcontentsline{toc}{section}{參考文獻}
+\begin{thebibliography}{99}
+\bibitem{applications2008}Makridakis, S., Wheelwright, S. C., \& Hyndman, R. J. (2008). Forecasting methods and applications. John wiley \& sons.
+\bibitem{breiman2001random} Breiman, L. (2001). Random forests. Machine learning, 45, 5-32.
+\bibitem{geurts2006extremely} Geurts, P., Ernst, D., \& Wehenkel, L. (2006). Extremely randomized trees. Machine Learning, 63(1), 3-42.
+\bibitem{criminisi2012decision} Criminisi, A., Shotton, J., \& Konukoglu, E. (2012). Decision forests for classification, regression, density estimation, manifold learning and semi-supervised learning. Microsoft Research Cambridge, Tech. Rep, 5(6), 12.
+\bibitem{PredictiveBigDataAnalytics}Seyedan, M., \& Mafakheri, F. (2020). Predictive big data analytics for supply chain demand forecasting: methods, applications, and research opportunities. Journal of Big Data, 7(1), 53.
+\bibitem{PredictingCustomerRetentionProfitability}Larivière, B., \& Van den Poel, D. (2005). Predicting customer retention and profitability by using random forests and regression forests techniques. Expert systems with applications, 29(2), 472-484.
+\bibitem{Entityembeddings}Guo, C., \& Berkhahn, F. (2016). Entity embeddings of categorical variables. arXiv preprint arXiv:1604.06737.
+\bibitem{GalliSoledad2020}Galli, Soledad(2020),Python Feature Engineering Cookbook,原文出版社：Packt Publishing.
+\bibitem{LundbergS2017}Lundberg, S. (2017). A unified approach to interpreting model predictions. arXiv preprint arXiv:1705.07874.
+\bibitem{Fasttreeshap2021}Yang, J. (2021). Fast treeshap: Accelerating shap value computation for trees. arXiv preprint arXiv:2109.09847.
+\bibitem{amit2013classification} Amit, Y., \& Geman, D. (2013). Shape quantization and recognition with randomized trees. Neural Computation, 9(7), 1545-1588.
+\bibitem{DeanandGhemawat2008}Dean, J., \& Ghemawat, S. (2008). MapReduce: simplified data processing on large clusters. Communications of the ACM, 51(1), 107-113.
+\bibitem{Zahariaetal2010}Zaharia, M., Chowdhury, M., Franklin, M. J., Shenker, S., \& Stoica, I. (2010). Spark: Cluster computing with working sets. In 2nd USENIX workshop on hot topics in cloud computing (HotCloud 10).
+\bibitem{meng2016mllib} Meng, X., Bradley, J., Yavuz, B., Sparks, E., Venkataraman, S., Liu, D., \& Zaharia, M. (2016). MLlib: Machine learning in Apache Spark. The Journal of Machine Learning Research, 17(1), 1235-1241.
+\bibitem{Asymptotic1952} Anderson, T. W., \& Darling, D. A. (1952). Asymptotic theory of certain" goodness of fit" criteria based on stochastic processes. The annals of mathematical statistics, 193-212.
+\bibitem{BoxCox1970}Box, G. E., \& Cox, D. R. (1964). An analysis of transformations. Journal of the Royal Statistical Society Series B: Statistical Methodology, 26(2), 211-243.
+\bibitem{micci2001preprocessing}Micci-Barreca, D. (2001). A preprocessing scheme for high-cardinality categorical attributes in classification and prediction problems. ACM SIGKDD explorations newsletter, 3(1), 27-32.
+\bibitem{kohavi1995study}Kohavi, Ron, and George H. John. "Wrappers for feature subset selection." Artificial Intelligence 97, no. 1-2 (1997): 273-324.
+\bibitem{Montavon2018neuralnetworks}Montavon, G., Samek, W., \& Müller, K. R. (2018). Methods for interpreting and understanding deep neural networks. Digital signal processing, 73, 1-15.
+\bibitem{Supplychain2007}Chopra, S., \& Meindl, P. (2007). Supply chain management. Strategy, planning \& operation (pp. 265-275). Gabler.
+
+\end{thebibliography}
+\end{document}
